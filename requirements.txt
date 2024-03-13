@@ -3,4 +3,4 @@ opencv-python-headless
 pytesseract
 pillow
 requests
-tesseract-ocr==4.1.1
+tesseract-ocr
