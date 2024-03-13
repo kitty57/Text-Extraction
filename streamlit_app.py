@@ -2,6 +2,8 @@ import streamlit as st
 import cv2
 import pytesseract
 from PIL import Image
+import numpy as np
+import requests
 
 # Function to extract text from image
 def extract_text(image):
@@ -16,11 +18,14 @@ def extract_text(image):
 
 # Streamlit app
 def main():
+    st.set_page_config(page_title="Text Extraction App", layout="centered")
     st.title("Text Extraction from Images")
+    st.markdown("---")
+    st.write("Upload an image or provide an image URL to extract text.")
+    st.markdown("---")
 
-    # Sidebar
-    st.sidebar.title("Options")
-    option = st.sidebar.radio("Select input type:", ("Upload Image", "Image URL"))
+    # Upload image or provide image URL
+    option = st.radio("Select input type:", ("Upload Image", "Image URL"))
 
     # Image processing
     if option == "Upload Image":
@@ -29,8 +34,11 @@ def main():
             image = Image.open(uploaded_file)
             st.image(image, caption='Uploaded Image', use_column_width=True)
             extracted_text = extract_text(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
-            st.write("\n Extracted Text:")
-            st.write(extracted_text)
+            if extracted_text:
+                st.subheader("Extracted Text:")
+                st.write(extracted_text)
+            else:
+                st.warning("No text detected in the image.")
     elif option == "Image URL":
         image_url = st.text_input("Enter image URL:")
         if st.button("Extract Text"):
@@ -39,10 +47,13 @@ def main():
                     image = Image.open(requests.get(image_url, stream=True).raw)
                     st.image(image, caption='Image from URL', use_column_width=True)
                     extracted_text = extract_text(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
-                    st.write("\n Extracted Text:")
-                    st.write(extracted_text)
+                    if extracted_text:
+                        st.subheader("Extracted Text:")
+                        st.write(extracted_text)
+                    else:
+                        st.warning("No text detected in the image.")
                 except Exception as e:
-                    st.write(f"Error loading image from URL: {e}")
+                    st.error(f"Error loading image from URL: {e}")
 
 if __name__ == "__main__":
     main()
