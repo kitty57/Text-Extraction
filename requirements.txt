@@ -2,6 +2,5 @@ streamlit
 opencv-python-headless
 pytesseract
 pillow
+numpy
 requests
-tesseract-ocr
-libleptonica-dev
