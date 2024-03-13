@@ -4,3 +4,4 @@ pytesseract
 pillow
 requests
 tesseract-ocr
+libleptonica-dev
